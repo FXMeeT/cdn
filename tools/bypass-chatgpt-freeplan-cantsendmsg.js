@@ -1,5 +1,5 @@
 // Only run on chat.openai.com
-if (window.location.hostname === 'chat.openai.com') {
+if (window.location.hostname === 'chatgpt.com') {
 
     // Function to enable and click the button
     function enableAndClickButton() {
