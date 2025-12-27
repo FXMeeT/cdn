@@ -1,7 +1,6 @@
-// Only run on chat.openai.com
 if (window.location.hostname === 'chatgpt.com') {
 
-    // Function to enable and click the button
+    // Function to enable and click the submit button
     function enableAndClickButton() {
         const button = document.getElementById('composer-submit-button');
         if (!button) return;
@@ -9,15 +8,15 @@ if (window.location.hostname === 'chatgpt.com') {
         // Force enable
         if (button.hasAttribute('disabled')) {
             button.removeAttribute('disabled');
-            console.log('Button is now enabled!');
+            console.log('Submit button enabled!');
         }
 
         // Click the button
         button.click();
-        console.log('Button clicked!');
+        console.log('Submit button clicked!');
     }
 
-    // Attach listener to textarea
+    // Function to attach textarea listeners
     function attachListener() {
         const textarea = document.getElementById('prompt-textarea');
         if (!textarea || textarea.dataset.listenerAttached) return;
@@ -32,7 +31,7 @@ if (window.location.hostname === 'chatgpt.com') {
 
         // Trigger button on Enter key
         textarea.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) { // Shift+Enter allows new line
+            if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault(); // prevent newline
                 enableAndClickButton();
             }
@@ -42,10 +41,27 @@ if (window.location.hostname === 'chatgpt.com') {
         console.log('Listeners attached to textarea.');
     }
 
-    // Observe DOM changes (for dynamically loaded elements)
-    const observer = new MutationObserver(() => attachListener());
+    // Function to check if the New Chat button exists
+    function checkNewChatButton() {
+        const newChatButton = Array.from(document.querySelectorAll('button.btn.btn-primary')).find(
+            btn => btn.textContent.trim() === 'New chat'
+        );
+        return !!newChatButton;
+    }
+
+    // Observe DOM changes to detect New Chat button dynamically
+    const observer = new MutationObserver(() => {
+        if (checkNewChatButton()) {
+            console.log('New Chat button detected. Activating script...');
+            attachListener();
+        }
+    });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    // Attach immediately if elements already exist
-    attachListener();
+    // Also check immediately in case it already exists
+    if (checkNewChatButton()) {
+        console.log('New Chat button already exists. Activating script...');
+        attachListener();
+    }
 }
+
